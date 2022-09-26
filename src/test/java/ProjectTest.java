@@ -1,7 +1,9 @@
 import org.apache.commons.io.FileUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.openqa.selenium.TakesScreenshot;
 
@@ -15,41 +17,57 @@ import java.util.concurrent.TimeUnit;
 public class ProjectTest {
 
     @Test
-    void navigateAndScreenshotAndScroll () throws IOException, InterruptedException {
+    void scroll () throws IOException {
+        String[] sims = {"Sims games", "Legacy", "Spinoff"};
+
         WebDriver driver = Helper.setupDriver();
-        driver.get(Helper.THESIMSURL);
+        driver.get(Scrolling.THESIMSURL);
         JavascriptExecutor jse = (JavascriptExecutor) driver;
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id(Helper.FIRSTHEADING)));
+        Assert.assertEquals(driver.getCurrentUrl(), Scrolling.THESIMSURL);
         driver.manage().window().maximize();
-        File screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        FileUtils.copyFile(screenshot, new File(Helper.FILEPATH + "1 - the sims wiki" + Helper.JPG));
-        WebElement simsGames = driver.findElement(By.id(Helper.SIMSGAMES));
-        jse.executeScript("arguments[0].scrollIntoView();",simsGames);
-        File screenshot2 = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        FileUtils.copyFile(screenshot2, new File(Helper.FILEPATH + "2 - sims games" + Helper.JPG));
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(Helper.LIVINLARGE))).click();
-        File screenshot3 = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        FileUtils.copyFile(screenshot3, new File(Helper.FILEPATH + "3 - livin large" + Helper.JPG));
-        jse.executeScript("window.scrollBy(0,-(document.body.scrollHeight))");
-        driver.navigate().back();
-        driver.navigate().back();
-        driver.navigate().forward();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(Helper.WIKIPEDIAMAIN))).click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(Helper.RANDOMPAGE))).click();
-        File random = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-        FileUtils.copyFile(random, new File(Helper.FILEPATH + "4 - random page" + Helper.JPG));
-        driver.navigate().back();
-        driver.navigate().forward();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id(Helper.FIRSTHEADING)));
-    //    File random2 = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-       // FileUtils.copyFile(random2, new File(Helper.FILEPATH + "5 - another random page" + Helper.JPG));
-
-
-
+        File screenshot = null;
+        File path = null;
+        Scrolling scroll = new Scrolling(driver);
+        for (int i = 0; i < sims.length; i++) {
+            screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            path =  new File(Helper.FILEPATH +  (i + 1) + sims[i] + Helper.JPG);
+            FileUtils.copyFile(screenshot,path);
+            //navigation
+                jse.executeScript("arguments[0].scrollIntoView();",scroll.elements);
+        }
     }
 
     @Test
+    void windowsTabs (){
+        WebDriver driver = Helper.setupDriver();
+        driver.get("");
+    }
+    @Test // navigation and assert
+    void navigateAssert () throws InterruptedException {
+        WebDriver driver = Helper.setupDriver();
+        driver.get(Navigate.MAINWIKIURL);
+        Assert.assertEquals(driver.getCurrentUrl(), Navigate.MAINWIKIURL);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.manage().window().maximize();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(Navigate.RANDOMPAGE))).click();
+        String pageUrl = driver.getCurrentUrl();
+        Thread.sleep(1000);
+        driver.navigate().refresh();
+        driver.navigate().back();
+        Assert.assertEquals(driver.getCurrentUrl(),Navigate.MAINWIKIURL);
+        driver.navigate().forward();
+        Assert.assertEquals(driver.getCurrentUrl(),pageUrl); // checking that back and forward got me to the same url
+        Thread.sleep(1000);
+        driver.navigate().back();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(Navigate.RANDOMPAGE))).click();
+        Assert.assertNotSame(driver.getCurrentUrl(),pageUrl); // checking that clicking on random again is not same
+        Thread.sleep(1000);
+
+
+    }
+    @Test // alerts+prompts, create file, save text in file
     void alertsAndText () throws IOException {
         WebDriver driver = Helper.setupDriver();
         driver.get(Helper.ALERATURL);
@@ -62,6 +80,29 @@ public class ProjectTest {
 
         String acceptedText = driver.findElement(By.id(Helper.AFTERPROMPTTEXTID)).getText();
         Helper.createFile(Helper.FILEPATH,"Prompt alert message"+Helper.TXT,acceptedText);
-
     }
+
+    @Test
+    void screenShot() throws IOException {
+        String[] sims = {"The sims wiki", "Sims games", "Living large", "random page"};
+        WebDriver driver = Helper.setupDriver();
+        driver.get(Scrolling.THESIMSURL);
+        JavascriptExecutor jse = (JavascriptExecutor) driver;
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.manage().window().maximize();
+        File screenshot = null;
+        File path = null;
+
+        for (int i = 0; i < sims.length; i++) {
+            screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            path =  new File(Helper.FILEPATH +  (i + 1) + sims[i] + Helper.JPG);
+            FileUtils.copyFile(screenshot,path);
+            //navigation
+
+        }
+
+        screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+    }
+
+
 }
