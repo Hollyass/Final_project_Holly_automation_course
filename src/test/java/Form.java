@@ -7,7 +7,7 @@ public class Form {
 
     private final String USERNAMEFIELD = "#HTMLFormElements > table > tbody > tr:nth-child(1) > td > input[type=text]"; // BY CSS
     private final String PASSWORDFIELD = "#HTMLFormElements > table > tbody > tr:nth-child(2) > td > input[type=password]"; // BY CSS
-    private final String COMMENTFIELD = "#HTMLFormElements > table > tbody > tr:nth-child(3) > td > textarea"; // BY CSS
+    public static final String COMMENTFIELD = "#HTMLFormElements > table > tbody > tr:nth-child(3) > td > textarea"; // BY CSS
    //private final String FILENAME = "#HTMLFormElements > table > tbody > tr:nth-child(1) > td > input[type=text]"; // BY CSS
     private final String CHECKBOX1 = "/html/body/div/div[3]/form/table/tbody/tr[5]/td/input[1]"; // BY fullxapth
     private final String CHECKBOX2 = "/html/body/div/div[3]/form/table/tbody/tr[5]/td/input[2]"; // BY fullxapth

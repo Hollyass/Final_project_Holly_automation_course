@@ -64,6 +64,8 @@ public class ProjectTest {
         Actions move = new Actions(driver);
         driver.manage().window().maximize();
 
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(Form.COMMENTFIELD))).clear();
+
         Form newForm = new Form(driver);
         newForm.signingUp(Helper.userOne);
 
