@@ -36,6 +36,7 @@ public class Form {
         this.userNameField = driver.findElement(By.cssSelector(USERNAMEFIELD));;
         this.passwordField = driver.findElement(By.cssSelector(PASSWORDFIELD));
         this.commentField = driver.findElement(By.cssSelector(COMMENTFIELD));
+        commentField.clear();
         this.checkbox1field = driver.findElement(By.xpath(CHECKBOX1));
         this.checkbox2field = driver.findElement(By.xpath(CHECKBOX2));
         this.checkbox3field = driver.findElement(By.xpath(CHECKBOX3));

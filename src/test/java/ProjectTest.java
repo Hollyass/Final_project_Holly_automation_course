@@ -13,7 +13,7 @@ import java.time.Duration;
 
 public class ProjectTest {
 
-    @Test
+    @Test // testing screenshots and scroll
     void screenshots() throws IOException, InterruptedException {
         String[] cats = {"Flowers and plants that cause rashes", "Flowers that cause upset stomachs", "Flowers and plants that cause organ damage"};
 
@@ -27,13 +27,11 @@ public class ProjectTest {
         File screenshot = null;
         File path = null;
         for (int i = 0; i < catScroll.catScroll.length; i++) {
-            jse.executeScript("arguments[0].scrollIntoView();",catScroll.catScroll);
-            Thread.sleep(1000);
-            for (int j = 0; j < cats.length ; j++) {
-                screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-                path =  new File(Helper.FILEPATH +  (i + 1) + cats[i] + Helper.JPG);
-                FileUtils.copyFile(screenshot,path);
-            }
+            jse.executeScript("arguments[0].scrollIntoView();",catScroll.catScroll[i]);
+            screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            path =  new File(Helper.FILEPATH +  (i + 1) + cats[i] + Helper.JPG);
+            FileUtils.copyFile(screenshot,path);
+            driver.quit();
         }
     }
 
@@ -55,7 +53,7 @@ public class ProjectTest {
         driver.quit();
     }
 
-    @Test // filling out form and saving results as text in file
+    @Test // filling out form and saving results as text in file and action
     void fillOutForm () throws IOException {
         WebDriver driver = Helper.setupDriver();
         WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
@@ -63,8 +61,6 @@ public class ProjectTest {
         Assert.assertEquals(driver.getCurrentUrl(),Helper.FORM);
         Actions move = new Actions(driver);
         driver.manage().window().maximize();
-
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(Form.COMMENTFIELD))).clear();
 
         Form newForm = new Form(driver);
         newForm.signingUp(Helper.userOne);
