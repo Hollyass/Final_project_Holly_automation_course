@@ -12,7 +12,5 @@ public class Windowstabs {
     public static final String GOOGLEURL = "https://www.google.com/";
     public static final String GOOGLESEARCHBOX = "/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input"; // byxpath
     public static final String GOOGLESEARCHBTN = "/html/body/div[1]/div[3]/form/div[1]/div[1]/div[3]/center/input[1]"; // byxpath
-    public static final String GB = "/html/body/div[1]/div[3]/form/div[1]/div[1]/div[2]/div[2]/div[5]/center/input[1]"; //bypatth
-    public static final String GOOGLE1STRESULT = // byxpath
-            "/html/body/div[8]/div/div[11]/div[1]/div[2]/div[2]/div/div/div[1]/div/div/div/div[1]/div/div/div[1]/div/a";
+
 }

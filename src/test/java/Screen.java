@@ -8,11 +8,7 @@ public class Screen {
     public static final String CATRASH = "poipoison-cat-rash"; // id
     public static final String CATVOMIT = "poipoison-cat-upset-stomach"; // id
     public static final String CATORGAN = "poipoison-cat-organ-failure"; // id
-    public static final String EMORGENCYCONTACT = "dpoiemer"; // id
 
-    WebElement catRash;
-    WebElement catVomit;
-    WebElement catOrgan;
 
     WebElement[] catScroll = new WebElement[3];
 

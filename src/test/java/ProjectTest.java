@@ -31,8 +31,9 @@ public class ProjectTest {
             screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
             path =  new File(Helper.FILEPATH +  (i + 1) + cats[i] + Helper.JPG);
             FileUtils.copyFile(screenshot,path);
-            driver.quit();
         }
+        driver.quit();
+
     }
 
     @Test // as per your request, copy text of para to file and screenshot of that same para
@@ -78,7 +79,9 @@ public class ProjectTest {
     @Test // windows, tabs, copy text and attribute
     void windowsAndTabs () throws InterruptedException {
         WebDriver driver = Helper.setupDriver();
+        Actions actions = new Actions(driver);
         WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(10));
+
         driver.get(Windowstabs.BOOKURL);
         Assert.assertEquals(driver.getCurrentUrl(),Windowstabs.BOOKURL);
         driver.manage().window().maximize();
@@ -105,8 +108,10 @@ public class ProjectTest {
 
         driver.switchTo().window(windowTwo);
         driver.manage().window().fullscreen();
+        driver.manage().window().maximize();
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(Windowstabs.GOOGLESEARCHBOX))).sendKeys(firstBookTitle);
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(Windowstabs.GOOGLESEARCHBTN))).click();
+        actions.doubleClick(driver.findElement(By.xpath(Windowstabs.GOOGLESEARCHBTN))).perform();
+
         driver.navigate().back();
         driver.manage().window().maximize();
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(Windowstabs.GOOGLESEARCHBOX))).sendKeys(secondBookTitle);
@@ -140,7 +145,7 @@ public class ProjectTest {
 
     }
     @Test // alerts+prompts, create file, save text in file
-    void alertsAndText () throws IOException {
+    void alertsAndText () throws IOException, InterruptedException {
         WebDriver driver = Helper.setupDriver();
         driver.get(Helper.ALERATURL);
         Assert.assertEquals(driver.getCurrentUrl(),Helper.ALERATURL);
@@ -148,11 +153,17 @@ public class ProjectTest {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id(Helper.ALERTID))).click();
         wait.until(ExpectedConditions.alertIsPresent()).accept();
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id(Helper.PROMPTID))).click();
-        wait.until(ExpectedConditions.alertIsPresent()).sendKeys("Debbie");
+        wait.until(ExpectedConditions.alertIsPresent()).sendKeys("Rossita");
         driver.switchTo().alert().accept();
 
         String acceptedText = driver.findElement(By.id(Helper.AFTERPROMPTTEXTID)).getText();
-        Helper.createFile(Helper.FILEPATH,"Prompt alert message"+Helper.TXT,acceptedText);
+        Helper.createFile(Helper.FILEPATH,"Birthday message"+Helper.TXT,acceptedText);
+
+        Thread.sleep(2000); // so you can see :)
+        File screenshot = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        File path =  new File(Helper.FILEPATH +  "Happy birthday Rossita" + Helper.JPG);
+        FileUtils.copyFile(screenshot,path);
+
         driver.quit();
     }
 
